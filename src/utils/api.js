@@ -2,6 +2,19 @@ import axios from 'axios';
 
 const API_BASE_URL =  'http://127.0.0.1:8000/feedback';
 
+
+const API_STATE_URL = 'http://127.0.0.1:8000/feedback/api';
+
+export const fetchStats = async (filter = 'all', endpoint = 'ALL/stats') => {
+  try {
+    const response = await axios.get(`${API_STATE_URL}/${endpoint}/`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching stats for ${filter}:`, error);
+    return [];
+  }
+};
+
 export const fetchFeedbacks = async (sourceFilter = 'all') => {
   try {
     // Fetch from different endpoints based on source
