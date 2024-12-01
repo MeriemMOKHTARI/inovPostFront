@@ -4,6 +4,7 @@ import Dashboard from './pages/Dashboard';
 import CrisisManagement from './pages/CrisisManagement';
 
 function App() {
+  console.log('App component rendering');
   return (
     <Router>
       <Layout>
@@ -17,4 +18,3 @@ function App() {
 }
 
 export default App;
-
