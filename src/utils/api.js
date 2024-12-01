@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL =  'http://172.20.10.3:8080/feedback';
+const API_BASE_URL =  'http://127.0.0.1:8000/feedback';
 
 export const fetchFeedbacks = async (sourceFilter = 'all') => {
   try {
