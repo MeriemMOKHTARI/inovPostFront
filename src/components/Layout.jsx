@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { BarChart2, AlertTriangle, MessageSquare, LogOut } from 'react-feather';
+import logo from '../assets/logo-1.png';
 
 function Layout({ children }) {
   const location = useLocation();
@@ -8,7 +9,7 @@ function Layout({ children }) {
     <div className="flex h-screen bg-gray-100">
       <aside className="w-64 bg-white shadow-md">
         <div className="p-4">
-          <img src="/logo.png" alt="Algerie Post" className="h-12" />
+          <img src={logo} alt="Algerie Post" className="h-30" />
         </div>
         <nav className="mt-8">
           <Link

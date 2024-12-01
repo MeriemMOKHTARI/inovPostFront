@@ -1,24 +1,33 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout';
-import Dashboard from './pages/Dashboard.jsx';
-import FeedbackManagement from './pages/feedback-management.jsx';
-import CrisisManagement from './pages/CrisisManagement';
+import React, { useContext } from 'react';
+import { BrowserRouter as Router, Route, Navigate, Routes } from 'react-router-dom';
+import { AuthProvider, AuthContext } from './context/AuthContext';
+import Login from './components/login';
+import Dashboard from './pages/Dashboard';
 
-function App() {
-  console.log('App component rendering');
+const PrivateRoute = ({ children }) => {
+  const { isAuthenticated } = useContext(AuthContext);
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
+
+const App = () => {
   return (
-    <Router>
-      <Layout>
+    <AuthProvider>
+      <Router>
         <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/feedback-management" element={<FeedbackManagement />} />
-        <Route path="/crisis-management" element={<CrisisManagement />} />
-         
-        
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
         </Routes>
-      </Layout>
-    </Router>
+      </Router>
+    </AuthProvider>
   );
-}
+};
 
 export default App;
+
