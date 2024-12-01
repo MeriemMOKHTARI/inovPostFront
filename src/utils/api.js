@@ -7,7 +7,7 @@ export const fetchFeedbacks = async (sourceFilter = 'all') => {
     // Fetch from different endpoints based on source
     const qrFeedbacksPromise = axios.get(`${API_BASE_URL}/qr-feedback/`);
     const formFeedbacksPromise = axios.get(`${API_BASE_URL}/form-feedback/`);
-    const socialFeedbacksPromise = axios.get(`${API_BASE_URL}/social-media-feedback/`);
+    const socialFeedbacksPromise = axios.get(`${API_BASE_URL}/social-feedback/`);
 
     const [qrFeedbacks, formFeedbacks, socialFeedbacks] = await Promise.all([
       qrFeedbacksPromise,
