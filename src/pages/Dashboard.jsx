@@ -1,228 +1,243 @@
+import React, { useState, useEffect } from 'react';
+import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { AlertCircle, TrendingUp, MessageSquare } from 'lucide-react';
 
+const initialMonthlyData = {
+  all: [
+    { month: 'Jan', positive: 450, neutral: 380, negative: 300 },
+    { month: 'Feb', positive: 440, neutral: 380, negative: 280 },
+    { month: 'Mar', positive: 440, neutral: 380, negative: 360 },
+    { month: 'Apr', positive: 280, neutral: 380, negative: 340 },
+    { month: 'May', positive: 440, neutral: 200, negative: 290 },
+    { month: 'Jun', positive: 450, neutral: 380, negative: 280 },
+    { month: 'Jul', positive: 430, neutral: 380, negative: 280 },
+    { month: 'Aug', positive: 440, neutral: 380, negative: 280 },
+  ],
+  qr: [
+    { month: 'Jan', positive: 200, neutral: 150, negative: 100 },
+    { month: 'Feb', positive: 220, neutral: 160, negative: 120 },
+    { month: 'Mar', positive: 210, neutral: 170, negative: 130 },
+    { month: 'Apr', positive: 180, neutral: 140, negative: 110 },
+    { month: 'May', positive: 230, neutral: 180, negative: 140 },
+    { month: 'Jun', positive: 240, neutral: 190, negative: 150 },
+    { month: 'Jul', positive: 250, neutral: 200, negative: 160 },
+    { month: 'Aug', positive: 260, neutral: 210, negative: 170 },
+  ],
+  form: [
+    { month: 'Jan', positive: 150, neutral: 130, negative: 100 },
+    { month: 'Feb', positive: 140, neutral: 120, negative: 90 },
+    { month: 'Mar', positive: 160, neutral: 140, negative: 110 },
+    { month: 'Apr', positive: 130, neutral: 110, negative: 80 },
+    { month: 'May', positive: 170, neutral: 150, negative: 120 },
+    { month: 'Jun', positive: 180, neutral: 160, negative: 130 },
+    { month: 'Jul', positive: 190, neutral: 170, negative: 140 },
+    { month: 'Aug', positive: 200, neutral: 180, negative: 150 },
+  ],
+  social: [
+    { month: 'Jan', positive: 100, neutral: 80, negative: 60 },
+    { month: 'Feb', positive: 110, neutral: 90, negative: 70 },
+    { month: 'Mar', positive: 120, neutral: 100, negative: 80 },
+    { month: 'Apr', positive: 90, neutral: 70, negative: 50 },
+    { month: 'May', positive: 130, neutral: 110, negative: 90 },
+    { month: 'Jun', positive: 140, neutral: 120, negative: 100 },
+    { month: 'Jul', positive: 150, neutral: 130, negative: 110 },
+    { month: 'Aug', positive: 160, neutral: 140, negative: 120 },
+  ],
+};
 
+const initialSentimentData = {
+  all: [
+    { month: 'Jan', positif: 320, neutre: 200, negatif: 240 },
+    { month: 'Feb', positif: 280, neutre: 190, negatif: 220 },
+    { month: 'Mar', positif: 290, neutre: 195, negatif: 180 },
+    { month: 'Apr', positif: 260, neutre: 220, negatif: 170 },
+    { month: 'May', positif: 330, neutre: 200, negatif: 250 },
+  ],
+  qr: [
+    { month: 'Jan', positif: 150, neutre: 100, negatif: 120 },
+    { month: 'Feb', positif: 140, neutre: 95, negatif: 110 },
+    { month: 'Mar', positif: 145, neutre: 98, negatif: 90 },
+    { month: 'Apr', positif: 130, neutre: 110, negatif: 85 },
+    { month: 'May', positif: 165, neutre: 100, negatif: 125 },
+  ],
+  form: [
+    { month: 'Jan', positif: 100, neutre: 60, negatif: 80 },
+    { month: 'Feb', positif: 90, neutre: 55, negatif: 70 },
+    { month: 'Mar', positif: 95, neutre: 58, negatif: 60 },
+    { month: 'Apr', positif: 85, neutre: 65, negatif: 55 },
+    { month: 'May', positif: 105, neutre: 60, negatif: 75 },
+  ],
+  social: [
+    { month: 'Jan', positif: 70, neutre: 40, negatif: 40 },
+    { month: 'Feb', positif: 50, neutre: 40, negatif: 40 },
+    { month: 'Mar', positif: 50, neutre: 39, negatif: 30 },
+    { month: 'Apr', positif: 45, neutre: 45, negatif: 30 },
+    { month: 'May', positif: 60, neutre: 40, negatif: 50 },
+  ],
+};
 
-// import React, { useState, useEffect } from 'react';
-// import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-// import FeedbackItem from '../components/FeedbackItem';
+function Card({ children, className = "" }) {
+  return (
+    <div className={`bg-white p-6 rounded-lg shadow-sm ${className}`}>
+      {children}
+    </div>
+  );
+}
 
-// const initialSentimentData = [
-//   { name: 'Jan', all: { positif: 300, neutre: 200, negatif: 250 }, qr: { positif: 100, neutre: 80, negatif: 70 }, form: { positif: 150, neutre: 100, negatif: 130 }, social: { positif: 50, neutre: 20, negatif: 50 } },
-//   { name: 'Feb', all: { positif: 200, neutre: 180, negatif: 220 }, qr: { positif: 80, neutre: 70, negatif: 90 }, form: { positif: 100, neutre: 90, negatif: 110 }, social: { positif: 20, neutre: 20, negatif: 20 } },
-//   { name: 'Mar', all: { positif: 280, neutre: 190, negatif: 180 }, qr: { positif: 120, neutre: 80, negatif: 60 }, form: { positif: 130, neutre: 90, negatif: 100 }, social: { positif: 30, neutre: 20, negatif: 20 } },
-//   { name: 'Apr', all: { positif: 250, neutre: 220, negatif: 170 }, qr: { positif: 90, neutre: 100, negatif: 50 }, form: { positif: 120, neutre: 100, negatif: 100 }, social: { positif: 40, neutre: 20, negatif: 20 } },
-//   { name: 'May', all: { positif: 320, neutre: 200, negatif: 250 }, qr: { positif: 130, neutre: 90, negatif: 100 }, form: { positif: 150, neutre: 90, negatif: 120 }, social: { positif: 40, neutre: 20, negatif: 30 } },
-// ];
-
-// const feedbackItems = [
-//   {
-//     type: 'qr',
-//     message: 'Service rapide et efficace au guichet 3',
-//     response: 'Merci pour votre retour positif !',
-//     date: '29 July 2023',
-//     sentiment: 'positive'
-//   },
-//   {
-//     type: 'form',
-//     message: 'Temps d\'attente trop long pour le retrait',
-//     response: 'Nous travaillons à améliorer nos délais',
-//     date: '29 July 2023',
-//     sentiment: 'negative'
-//   },
-//   {
-//     type: 'social',
-//     message: 'Excellente expérience avec le nouveau service en ligne',
-//     response: 'Nous sommes ravis que vous appréciez notre nouveau service !',
-//     date: '30 July 2023',
-//     sentiment: 'positive'
-//   }
-// ];
-
-// const filterChartData = (data, filter) => {
-//   return data.map(item => ({
-//     name: item.name,
-//     ...item[filter]
-//   }));
-// };
-
-// function SourceDropdown({ onSelect, currentValue }) {
-//   const [isOpen, setIsOpen] = useState(false);
-
-//   const sources = [
-//     { value: 'all', label: 'Toute les sources' },
-//     { value: 'qr', label: 'Code QR' },
-//     { value: 'form', label: 'Formulaire' },
-//     { value: 'social', label: 'Web Scraping' }
-//   ];
-
-//   return (
-//     <div className="relative inline-block text-left z-50">
-//       <button
-//         onClick={() => setIsOpen(!isOpen)}
-//         className="inline-flex justify-center w-full px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-blue-500"
-//       >
-//         {sources.find(source => source.value === currentValue)?.label || 'Toute les sources'}
-//         <svg className="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-//           <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-//         </svg>
-//       </button>
-
-//       {isOpen && (
-//         <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-//           <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-//             {sources.map((source) => (
-//               <button
-//                 key={source.value}
-//                 onClick={() => {
-//                   onSelect(source.value);
-//                   setIsOpen(false);
-//                 }}
-//                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-//                 role="menuitem"
-//               >
-//                 {source.label}
-//               </button>
-//             ))}
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
-
-// function Dashboard() {
-//   const [feedbackFilter, setFeedbackFilter] = useState('all');
-//   const [chartFilter, setChartFilter] = useState('all');
-//   const [filteredChartData, setFilteredChartData] = useState(initialSentimentData);
-
-//   useEffect(() => {
-//     setFilteredChartData(filterChartData(initialSentimentData, chartFilter));
-//   }, [chartFilter]);
-
-//   const filteredFeedback = feedbackItems.filter(item =>
-//     feedbackFilter === 'all' || item.type === feedbackFilter
-//   );
-
-//   return (
-//     <div className="p-6">
-//       <div className="flex justify-between items-center mb-6">
-//         <h1 className="text-2xl font-bold">Bienvenue à Algerie post</h1>
-//         <div className="flex items-center">
-//           <input
-//             type="date"
-//             className="px-4 py-2 border rounded-lg mr-4"
-//             defaultValue="2023-07-29"
-//           />
-//           <SourceDropdown onSelect={setFeedbackFilter} currentValue={feedbackFilter} />
-//         </div>
-//       </div>
-
-//       <div className="mb-8">
-//         <h2 className="text-xl font-semibold mb-4">Derniers Retours Clients</h2>
-//         <div className="space-y-4">
-//           {filteredFeedback.map((item, index) => (
-//             <FeedbackItem key={index} {...item} />
-//           ))}
-//         </div>
-//       </div>
-
-//       <div className="bg-white p-6 rounded-lg shadow-sm">
-//         <div className="flex justify-between items-center mb-6">
-//           <h2 className="text-xl font-semibold">Analyse des Sentiments</h2>
-//           <div className="relative z-50">
-//             <SourceDropdown onSelect={setChartFilter} currentValue={chartFilter} />
-//           </div>
-//         </div>
-//         <div className="h-[400px]">
-//           <ResponsiveContainer width="100%" height="100%">
-//             <LineChart data={filteredChartData}>
-//               <CartesianGrid strokeDasharray="3 3" />
-//               <XAxis dataKey="name" />
-//               <YAxis />
-//               <Tooltip />
-//               <Legend />
-//               <Line type="monotone" dataKey="positif" stroke="#10B981" />
-//               <Line type="monotone" dataKey="neutre" stroke="#6B7280" />
-//               <Line type="monotone" dataKey="negatif" stroke="#EF4444" />
-//             </LineChart>
-//           </ResponsiveContainer>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default Dashboard;
-
-
-
-
-
-
-import { useState, useEffect } from 'react';
-import { fetchFeedbacks } from '../utils/api';
-import FeedbackItem from '../components/FeedbackItem';
+function FilterSelect({ value, onChange, className = "" }) {
+  return (
+    <select
+      value={value}
+      onChange={onChange}
+      className={`border rounded p-2 text-sm ${className}`}
+    >
+      <option value="all">All</option>
+      <option value="qr">QR Code</option>
+      <option value="form">Form</option>
+      <option value="social">Social Media</option>
+    </select>
+  );
+}
 
 function Dashboard() {
-  const [feedbacks, setFeedbacks] = useState([]);
-  const [sourceFilter, setSourceFilter] = useState('all');
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [monthlyFilter, setMonthlyFilter] = useState('all');
+  const [sentimentFilter, setSentimentFilter] = useState('all');
+  const [monthlyData, setMonthlyData] = useState(initialMonthlyData.all);
+  const [sentimentData, setSentimentData] = useState(initialSentimentData.all);
 
   useEffect(() => {
-    async function loadFeedbacks() {
-      setIsLoading(true);
-      try {
-        const data = await fetchFeedbacks(sourceFilter);
-        setFeedbacks(data);
-        setError(null);
-      } catch (err) {
-        setError('Failed to fetch feedbacks. Please try again later.');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    loadFeedbacks();
-  }, [sourceFilter]);
+    setMonthlyData(initialMonthlyData[monthlyFilter]);
+  }, [monthlyFilter]);
+
+  useEffect(() => {
+    setSentimentData(initialSentimentData[sentimentFilter]);
+  }, [sentimentFilter]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Feedback Dashboard</h1>
-      <div className="mb-4">
-        <label htmlFor="sourceFilter" className="mr-2">Filter by source:</label>
-        <select
-          id="sourceFilter"
-          value={sourceFilter}
-          onChange={(e) => setSourceFilter(e.target.value)}
-          className="border rounded p-2"
-        >
-          <option value="all">All</option>
-          <option value="qr">QR Code</option>
-          <option value="form">Form</option>
-          <option value="social">Social Media</option>
-        </select>
+    <div className="p-6 space-y-6 bg-gray-50">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Tableau de Bord</h1>
       </div>
-      {isLoading && <p>Loading feedbacks...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-      {!isLoading && !error && (
-        <div>
-          {feedbacks.length === 0 ? (
-            <p>No feedbacks found.</p>
-          ) : (
-            feedbacks.map((feedback, index) => (
-              <FeedbackItem
-                key={feedback.id || index}
-                type={feedback.type}
-                content={feedback.content || feedback.message}
-                response={feedback.response}
-                created_at={feedback.created_at}
-                sentiment={feedback.sentiment}
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="md:col-span-3">
+          <Card>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Analyse Mensuelle</h2>
+              <FilterSelect
+                value={monthlyFilter}
+                onChange={(e) => setMonthlyFilter(e.target.value)}
               />
-            ))
-          )}
+            </div>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart 
+                data={monthlyData}
+                barSize={12}
+                barGap={2}
+                margin={{ top: 20, right: 120, bottom: 20, left: 20 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" vertical={false} />
+                <XAxis 
+                  dataKey="month" 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#666' }}
+                />
+                <YAxis 
+                  axisLine={false}
+                  tickLine={false}
+                  tick={{ fill: '#666' }}
+                  domain={[0, 500]}
+                  ticks={[0, 100, 200, 300, 400, 500]}
+                />
+                <Tooltip />
+                <Legend 
+                  align="right" 
+                  verticalAlign="middle"
+                  layout="vertical"
+                  wrapperStyle={{ paddingLeft: "30px" }}
+                />
+                <Bar dataKey="negative" name="Negative" fill="#212121" radius={[2, 2, 0, 0]} />
+                <Bar dataKey="neutral" name="Neutre" fill="#9E9E9E" radius={[2, 2, 0, 0]} />
+                <Bar dataKey="positive" name="Positifs" fill="#2196F3" radius={[2, 2, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
         </div>
-      )}
+
+        <div className="space-y-6">
+          <Card>
+            <div className="flex items-start gap-4">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <MessageSquare className="h-6 w-6 text-blue-500" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Feed-backs ce mois</p>
+                <h3 className="text-2xl font-bold">34520</h3>
+              </div>
+            </div>
+          </Card>
+
+          <Card>
+            <div className="flex items-start gap-4">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <AlertCircle className="h-6 w-6 text-blue-500" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Alerte Détectée</p>
+                <h3 className="text-2xl font-bold">29</h3>
+              </div>
+            </div>
+          </Card>
+
+          <Card>
+            <div className="flex items-start gap-4">
+              <div className="p-2 bg-green-100 rounded-lg">
+                <TrendingUp className="h-6 w-6 text-green-500" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Taux de Réponse</p>
+                <h3 className="text-2xl font-bold">95%</h3>
+              </div>
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      <Card>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold">Analyse des Sentiments</h2>
+          <FilterSelect
+            value={sentimentFilter}
+            onChange={(e) => setSentimentFilter(e.target.value)}
+          />
+        </div>
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart data={sentimentData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+            <XAxis 
+              dataKey="month" 
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: '#666' }}
+            />
+            <YAxis 
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: '#666' }}
+            />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="positif" stroke="#4CAF50" name="Positif" dot={false} />
+            <Line type="monotone" dataKey="neutre" stroke="#9E9E9E" name="Neutre" dot={false} />
+            <Line type="monotone" dataKey="negatif" stroke="#f44336" name="Négatif" dot={false} />
+          </LineChart>
+        </ResponsiveContainer>
+      </Card>
     </div>
   );
 }
 
 export default Dashboard;
+
+
