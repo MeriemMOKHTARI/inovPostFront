@@ -1,6 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { BarChart2, AlertTriangle, FileText, LogOut } from 'react-feather';
-import logo from '../assets/logo-1.png';""
+import { BarChart2, AlertTriangle, MessageSquare, LogOut } from 'react-feather';
 
 function Layout({ children }) {
   const location = useLocation();
@@ -9,7 +8,7 @@ function Layout({ children }) {
     <div className="flex h-screen bg-gray-100">
       <aside className="w-64 bg-white shadow-md">
         <div className="p-4">
-          <img src={logo} alt="Algerie Post" className="h-32" />
+          <img src="/logo.png" alt="Algerie Post" className="h-12" />
         </div>
         <nav className="mt-8">
           <Link
@@ -21,6 +20,16 @@ function Layout({ children }) {
             <BarChart2 className="w-5 h-5 mr-3" />
             <span>Tableau de Bord</span>
           </Link>
+       
+          <Link
+            to="/feedback-management"
+            className={`flex items-center px-6 py-3 text-gray-700 ${
+              location.pathname === '/feedback-management' ? 'bg-blue-50 border-r-4 border-blue-500' : ''
+            }`}
+          >
+            <MessageSquare className="w-5 h-5 mr-3" />
+            <span>Gestion de Feedback</span>
+          </Link>
           <Link
             to="/crisis-management"
             className={`flex items-center px-6 py-3 text-gray-700 ${
@@ -29,13 +38,6 @@ function Layout({ children }) {
           >
             <AlertTriangle className="w-5 h-5 mr-3" />
             <span>Gestion des risques</span>
-          </Link>
-          <Link
-            to="/recommendations"
-            className={`flex items-center px-6 py-3 text-gray-700`}
-          >
-            <FileText className="w-5 h-5 mr-3" />
-            <span>Solution recommandé</span>
           </Link>
         </nav>
         <div className="absolute bottom-0 w-64 p-4">
@@ -53,4 +55,3 @@ function Layout({ children }) {
 }
 
 export default Layout;
-
